@@ -13,6 +13,7 @@ var CSS_PREFIX = 'layer-switcher-';
  * @param {String} opt_options.groupSelectStyle either `'none'` - groups don't get a checkbox,
  *   `'children'` (default) groups have a checkbox and affect child visibility or
  *   `'group'` groups have a checkbox but do not alter child visibility (like QGIS).
+ * @param {boolean} opt_options.reverse Reverse the layer order. Defaults to true.
  */
 export default class LayerSwitcher extends Control {
 
@@ -28,6 +29,8 @@ export default class LayerSwitcher extends Control {
         super({element: element, target: options.target});
 
         this.groupSelectStyle = LayerSwitcher.getGroupSelectStyle(options.groupSelectStyle);
+
+        this.reverse = (options.reverse !== false);
 
         this.mapListeners = [];
 
@@ -108,14 +111,14 @@ export default class LayerSwitcher extends Control {
             this.element.classList.remove(this.shownClassName);
         }
     }
-
+    
     /**
     * Re-draw the layer panel to represent the current state of the layers.
     */
     renderPanel() {
-        LayerSwitcher.renderPanel(this.getMap(), this.panel, {
-            groupSelectStyle: this.groupSelectStyle
-        });
+        this.dispatchEvent({ type: 'render' });
+        LayerSwitcher.renderPanel(this.getMap(), this.panel, { groupSelectStyle: this.groupSelectStyle, reverse: this.reverse });
+        this.dispatchEvent({ type: 'rendercomplete' });
     }
 
     /**
@@ -124,6 +127,10 @@ export default class LayerSwitcher extends Control {
     * @param {Element} panel The DOM Element into which the layer tree will be rendered
     */
     static renderPanel(map, panel, options) {
+        // Create the event.
+        var render_event = new Event('render');
+        // Dispatch the event.
+        panel.dispatchEvent(render_event);
 
         options = options || {};
 
@@ -158,6 +165,10 @@ export default class LayerSwitcher extends Control {
             LayerSwitcher.renderPanel(map, panel, options);
         });
 
+        // Create the event.
+        var rendercomplete_event = new Event('rendercomplete');
+        // Dispatch the event.
+        panel.dispatchEvent(rendercomplete_event);
     }
 
     static isBaseGroup(lyr) {
@@ -298,7 +309,9 @@ export default class LayerSwitcher extends Control {
               li.classList.add(CSS_PREFIX + lyr.get('fold'));
               const btn = document.createElement('button');
               btn.onclick = function (e) {
+                e = e || window.event;
                 LayerSwitcher.toggleFold_(lyr, li);
+                e.preventDefault();
               };
               li.appendChild(btn);
             }
@@ -367,7 +380,8 @@ export default class LayerSwitcher extends Control {
     * @param {Element} elm DOM element that children will be appended to.
     */
     static renderLayers_(map, lyr, elm, options, render) {
-        var lyrs = lyr.getLayers().getArray().slice().reverse();
+        var lyrs = lyr.getLayers().getArray().slice();
+        if(options.reverse) lyrs = lyrs.reverse();
         for (var i = 0, l; i < lyrs.length; i++) {
             l = lyrs[i];
             if (l.get('title')) {
