@@ -28,7 +28,7 @@ The examples demonstrate usage and can be viewed online thanks to [raw.githack.c
     -   Demonstrates setting the `fold` property of a Group to allow the group to be collapsed.
 -   [Selectable Groups](http://raw.githack.com/walkermatt/ol-layerswitcher/master/examples/select-groups.html)
     -   Demonstrates setting the [`groupSelectStyle`](#layerswitcher) option which determines if groups have a checkbox and how toggling a groups visibility affects it's children. The demo includes the ability to change the `groupSelectStyle` to easily see the affect of the different values.
-    [Render event](http://raw.githack.com/umbe1987/ol-layerswitcher/renderevent_example/examples/render_event.html)
+-   [Render event](http://raw.githack.com/umbe1987/ol-layerswitcher/renderevent_example/examples/render_event.html)
     -   ADD DESCRIPTION HERE.
 -   [Bundling with `ol` package (Browserify, Parcel, Webpack...)](https://github.com/walkermatt/ol-layerswitcher-examples)
     -   To use the layer switcher with the [`ol` package](https://www.npmjs.com/package/ol) and a module bundler such as Browserify, Parcel, Webpack etc. see [ol-layerswitcher-examples](https://github.com/walkermatt/ol-layerswitcher-examples).
