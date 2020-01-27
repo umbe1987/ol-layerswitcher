@@ -109,11 +109,13 @@
 
     var layer_class = document.getElementsByClassName("layer");
 
-    layerSwitcher.on('render', function () {
+    var panel = document.getElementsByClassName("panel")[0];
+
+    panel.addEventListener('render', function(){
         console.log("RENDERING");
     });
 
-    layerSwitcher.on('rendercomplete', function () {
+    panel.addEventListener('rendercomplete', function () {
         ol.control.LayerSwitcher.forEachRecursive(map, function (l, idx, a) {
             var sliders = [];
             if (l.getLayers) {
